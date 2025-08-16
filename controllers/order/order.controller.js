@@ -676,8 +676,8 @@ const placeOrder = async (req, res) => {
           },
         },
       ],
-      success_url: `http://localhost:5000/v1/stripe/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:5000/v1/stripe/cancel`,
+      success_url: `${APP_URL}/stripe/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${APP_URL}/stripe/cancel`,
       metadata: {
         user_id: req.body.user_id,
         address_id: req.body.address_id,
