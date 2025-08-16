@@ -74,9 +74,9 @@ app.use(errorHandler.genericErrorHandler);
 
 
 //server configuration
-const server = app.listen(process.env.PORT, async () => {
-  console.log(`Server up successfully - host: ${process.env.HOST} port: ${process.env.PORT}`);
-});
+// const server = app.listen(process.env.PORT, async () => {
+//   console.log(`Server up successfully - host: ${process.env.HOST} port: ${process.env.PORT}`);
+// });
 
 process.on('unhandledRejection', (err) => {
   console.log('possibly unhandled rejection happened');
