@@ -43,8 +43,5 @@
     "jest": "^27.5.1",
     "nodemon": "^3.1.0",
     "supertest": "^6.2.2"
-  },
-  "engines": {
-    "node": "20.x"
   }
 }
