@@ -1,0 +1,1388 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Eyewear API"
+basePath: "/v1"
+
+parameters:
+  Authrization:
+    in: header
+    name: authorization
+    type: string
+    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Indhc2VlbUB5b3BtYWlsLmNvbSIsInVzZXJJZCI6IjYxNmE4MmQyNzQwZTk5MzY4OTNmZTdiNCIsImlhdCI6MTYzNzY2NzkxMSwiZXhwIjoxNjQwMDg3MTExfQ.sOiVb2KjS_5mfUJSPKi9Iymx4mr8LJb3UElGuZ3999Q"
+    default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Indhc2VlbUB5b3BtYWlsLmNvbSIsInVzZXJJZCI6IjYxNmE4MmQyNzQwZTk5MzY4OTNmZTdiNCIsImlhdCI6MTYzNzY2NzkxMSwiZXhwIjoxNjQwMDg3MTExfQ.sOiVb2KjS_5mfUJSPKi9Iymx4mr8LJb3UElGuZ3999Q
+  Timezone:
+     in: header
+     name: timezone
+     type: string
+     example: "Asia/Calcutta"
+     default: "Asia/Calcutta"
+     required: true
+  AcceptLanguage:
+     in: header
+     name: Accept-Language
+     type: string
+     example: "en/hi"
+     default: hi  
+     required: true
+
+tags:
+  - name: Eyewear
+    description: Endpoints for Eyewear React
+
+
+      
+paths:
+  /category:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: Returns a list of category.
+      description: get all category list.
+      tags:
+        - home page apis  
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/category"
+
+  /homeproducts:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: get list of home page products.
+      description: get list of home page products.
+      tags:
+        - home page apis
+      parameters:
+        - in: query
+          name: category
+          type: string
+          example: "0"
+          required: true  
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/homeProducts"  
+            
+  
+  /topratedproducts:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: get list of top rated products products.
+      description: get list of top rated products products.
+      tags:
+        - About Us api
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/topRatedProducts"
+
+  /contact:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'  
+    post:
+      summary: "This web service allows to user send user query to admin"
+      description: contact us api
+      tags:
+        - contact us api
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                required: true
+                type: string
+                example: "Don Joe"
+              email:
+                required: true
+                type: string
+                example: "donjoe@gmail.com"
+              phone:
+                required: true
+                type: string
+                example: "8785993655"  
+              message:
+                required: true
+                type: string
+                example: "How can i add items in cart"                
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/contactsave"
+
+  /subscribe:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'  
+    post:
+      summary: "This web service allows to user subscribe newsletter"
+      description: subscriber news letter us api
+      tags:
+        - subscriber news letter api
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                required: true
+                type: string
+                example: "waseem@yopmail.com"            
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/subscriberSave"
+
+  /register:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "User Registration"
+      description: User register api
+      tags:
+        - User auth apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                required: true
+                type: string
+                example: "Don Joe"
+              email:
+                required: true
+                type: string
+                example: "donjoe@gmail.com"
+              password:
+                required: true
+                type: string
+                example: "Test@123"  
+              login_type:
+                required: true
+                type: number
+                example: 0                
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/userRegister"
+
+  /sendotp:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'  
+    post:
+      summary: "resend OTP"
+      description: resned OTP API
+      tags:
+        - User auth apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                required: true
+                type: string
+                example: "example@gmail.com"              
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/resendOtp"
+
+  /verifyotp:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "verify OTP"
+      description: verify OTP API
+      tags:
+        - User auth apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                required: true
+                type: string
+                example: "example@gmail.com" 
+              otp:
+                required: true
+                type: number
+                example: 1234              
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/verifyOtp"            
+
+  /login:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'  
+    post:
+      summary: "user login"
+      description: Login Api
+      tags:
+        - User auth apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                required: true
+                type: string
+                example: "example@gmail.com" 
+              password:
+                required: true
+                type: string
+                example: "Test@123"
+              login_type:
+                required: true
+                type: number
+                example: 0     
+              device_token:
+                required: true
+                type: string
+                example: "evooy2mXFUCsSk60mSohrg:APA91bEsfv3OTo8bJw80hyDTOwxSK-uWEHwFKOg1hRIQs0PWgW2msso3p4XylM9M-bIn9Hu-dQ8dArQ1Sa2TaRJ0uFkMWJcGRYz_97WbVoZXiDfjcQNNUbfmDYH9cK8RIqwN66xu3uNv"                                     
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/loginSave"  
+  
+  /sociallogin:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "user login"
+      description: Login Api
+      tags:
+        - User auth apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "exampleone"
+              email:
+                type: string
+                example: "example@gmail.com" 
+              social_id:
+                required: true
+                type: string
+                example: "117988134179193593975"
+              login_type:
+                required: true
+                type: number
+                example: 0     
+              device_token:
+                required: true
+                type: string
+                example: "evooy2mXFUCsSk60mSohrg:APA91bEsfv3OTo8bJw80hyDTOwxSK-uWEHwFKOg1hRIQs0PWgW2msso3p4XylM9M-bIn9Hu-dQ8dArQ1Sa2TaRJ0uFkMWJcGRYz_97WbVoZXiDfjcQNNUbfmDYH9cK8RIqwN66xu3uNv"                                     
+    responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/socialloginSave"            
+            
+  /forgotpassword:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "forgot password"
+      description: forgot password API
+      tags:
+        - User auth apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                required: true
+                type: string
+                example: "example@gmail.com"              
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/forgotPassword"  
+
+  /latestproducts:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: Returns a list of latest products.
+      description: get all latest products list.
+      tags:
+        - Shop apis  
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/latestproductsSave"
+
+  /products:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "get all products"
+      description: get all products API
+      tags:
+        - Shop apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: page
+          type: number
+          example: 1
+          default: 1
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: array
+            properties:
+              price:
+                type: string
+                default: null    
+              categories:
+                type: string
+                default: [] 
+              rating:
+                type: string
+                default: []                         
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/productsGet"
+
+  /productdetail:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: "get single product api"
+      description: get single product API
+      tags:
+        - Shop apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: product_id
+          type: string
+          required: true
+          example: 616325ececd4223283d4f123
+          default: 616325ececd4223283d4f123    
+        - in: query
+          name: user_id
+          type: string
+          example: null
+          default: null                 
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/productsGet"
+
+  /carts:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: "get user cart api"
+      description: get user cart API
+      tags:
+        - Cart apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: user_id
+          type: string
+          required: true
+          example: 616a82d2740e9936893fe7b4
+          default: 616a82d2740e9936893fe7b4                   
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/cartGet"
+
+  /carts/:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "add cart api"
+      description: add cart API
+      tags:
+        - Cart apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              user_id:
+                type: string
+                example: 616a82d2740e9936893fe7b4
+              product_id:
+                type: string
+                example: 616325ececd4223283d4f123
+              quantity:
+                required: true
+                type: number
+                example: 1                 
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/cartAdd"    
+            
+  /carts/{id}:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    put:
+      summary: "update cart api"
+      description: update cart API
+      tags:
+        - Cart apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          example: 617442a33fd5225b3c8f2b5a
+          default: 617442a33fd5225b3c8f2b5a
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              quantity:
+                required: true
+                type: number
+                example: 1                 
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/cartUpdate" 
+
+  /carts/{id}/:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    delete:
+      summary: "delete cart api"
+      description: delete cart API
+      tags:
+        - Cart apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          example: 617442a33fd5225b3c8f2b5a
+          default: 617442a33fd5225b3c8f2b5a              
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/cartDelete"   
+            
+  /address:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: "get user address api"
+      description: get user address API
+      tags:
+        - Address apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: user_id
+          type: string
+          required: true
+          example: 616a82d2740e9936893fe7b4
+          default: 616a82d2740e9936893fe7b4                   
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/addressGet"
+
+  /address/add:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "add address api"
+      description: add address API
+      tags:
+        - Address apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                example: null
+              user_id:
+                type: string
+                example: 616a82d2740e9936893fe7b4
+                required: true
+              street:
+                type: string
+                example: 16
+                required: true
+              address_type:
+                required: true
+                type: string
+                example: Office  
+              address:
+                required: true
+                type: string
+                example: yamuna vihar
+              landmark:
+                required: true
+                type: string
+                example: golden public school
+              city:
+                required: true
+                type: string
+                example: new delhi      
+              state:
+                required: true
+                type: string
+                example: delhi      
+              zipcode:
+                required: true
+                type: number
+                example: 110053                          
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/addressAdd"
+
+  /address/{id}:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    put:
+      summary: "add address api"
+      description: add address API
+      tags:
+        - Address apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          example: 61742ec7d3ece53de339d5ec
+          default: 61742ec7d3ece53de339d5ec
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 61742ec7d3ece53de339d5ec
+              user_id:
+                type: string
+                example: 616a82d2740e9936893fe7b4
+                required: true
+              street:
+                type: string
+                example: 16
+                required: true
+              address_type:
+                required: true
+                type: string
+                example: Home  
+              address:
+                required: true
+                type: string
+                example: yamuna vihar
+              landmark:
+                required: true
+                type: string
+                example: golden public school
+              city:
+                required: true
+                type: string
+                example: new delhi      
+              state:
+                required: true
+                type: string
+                example: delhi      
+              zipcode:
+                required: true
+                type: number
+                example: 110044                          
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/addressUpdate" 
+            
+  /address/{id}/:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: "show address api"
+      description: show  address API
+      tags:
+        - Address apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          example: 61742ec7d3ece53de339d5ec   
+          default: 61742ec7d3ece53de339d5ec               
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/addressShow"
+
+  /address/{id}?type=delete:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    delete:
+      summary: "delete address api"
+      description: delete  address API
+      tags:
+        - Address apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          example: 6175908b2e8f9b7e4471520f 
+          default: 6175908b2e8f9b7e4471520f                
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/addressDelete"
+
+
+  /coupons:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: "get discount coupons list api"
+      description: get discount coupons list API
+      tags:
+        - coupons apis
+      produces:
+        - "application/json"              
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/getCoupons"
+
+
+  /getcheckoutinfo:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: "get checkout information api"
+      description: get checkout information API
+      tags:
+        - Order apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: user_id
+          type: string
+          required: true
+          example: 616a82d2740e9936893fe7b4 
+          default: 616a82d2740e9936893fe7b4                
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/getCheckoutInfo"
+
+
+  /deliverycharge:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "Delivery Charge"
+      description: Delivery Charge API
+      tags:
+        - Order apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              total_amount:
+                required: true
+                type: number
+                example: 500
+                default: 500             
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/deliveryCharge"
+
+  /checkorder:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "Check Order"
+      description: Check Order API
+      tags:
+        - Order apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              user_id:
+                required: true
+                type: string
+                example: 616a82d2740e9936893fe7b4 
+                default: 616a82d2740e9936893fe7b4            
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/checkOrder"     
+            
+            
+  /applycoupon:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "Apply coupon for Order"
+      description: Apply coupon API
+      tags:
+        - Order apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              user_id:
+                required: true
+                type: string
+                example: 616a82d2740e9936893fe7b4 
+                default: 616a82d2740e9936893fe7b4   
+              coupon_code:
+                required: true
+                type: string
+                example: H9Gf38rJq
+                default: H9Gf38rJq            
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/applyCoupon"
+
+
+  /placeorder:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "Place Order"
+      description: Place Order API
+      tags:
+        - Order apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              user_id:
+                required: true
+                type: string
+                example: 616a82d2740e9936893fe7b4 
+                default: 616a82d2740e9936893fe7b4   
+              coupon_code:
+                type: string
+                default:  
+              name:
+                required: true
+                type: string
+                example: Test
+                default: Test          
+              payment_method:
+                required: true
+                type: string
+                example: stripe
+                default: stripe
+              card:
+                required: true
+                type: number
+                example: 4242424242424242
+                default: 4242424242424242
+              month:
+                required: true
+                type: number
+                example: 12
+                default: 12 
+              year:
+                required: true
+                type: number
+                example: 2025
+                default: 2025
+              cvv:
+                required: true
+                type: number
+                example: 123
+                default: 123  
+              notes:
+                required: true
+                type: string
+                example: Deliver very fast
+                default: Deliver very fast
+              address_id:
+                required: true
+                type: string
+                example: 61742ec7d3ece53de339d5ec
+                default: 61742ec7d3ece53de339d5ec
+              
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/placeOrder"
+
+  /orders:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: "Orders"
+      description: get user orders by status API
+      tags:
+        - Order apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: page
+          type: number
+          example: 1
+          default: 1
+          required: true 
+        - in: query
+          name: user_id
+          type: string
+          required: true
+          example: 616a82d2740e9936893fe7b4
+          default: 616a82d2740e9936893fe7b4 
+        - in: query
+          name: status
+          type: number
+          required: true
+          example: 1
+          default: 1 
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/getOrders"
+
+  /notifications:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: "Notifitions"
+      description: Notifitions API
+      tags:
+        - Notification apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: page
+          type: number
+          example: 1
+          default: 1
+          required: true         
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/Notification"
+
+  /unreadcount:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: "Notifitions Unread Count"
+      description: Notifitions Unread Count API
+      tags:
+        - Notification apis
+      produces:
+        - "application/json"       
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/NotificationUnreadCount"
+
+definitions:
+  Timestamp:
+    type: object
+    properties:
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+  category:
+    allOf:
+      - $ref: "#/definitions/category"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "data retrived successfullly."  
+
+  homeProducts:
+    allOf:
+      - $ref: "#/definitions/homeProducts"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "data retrived successfullly."
+
+  topRatedProducts:
+    allOf:
+      - $ref: "#/definitions/topRatedProducts"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "data retrived successfullly."
+
+  contactsave:
+    allOf:
+      - $ref: "#/definitions/contactsave"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "Contacted us successfullly."
+
+  subscriberSave:
+    allOf:
+      - $ref: "#/definitions/subscriberSave"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "News letter subscribed successfullly."
+
+  userRegister:
+    allOf:
+      - $ref: "#/definitions/userRegister"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "successfullly registered"    
+            
+  resendOtp:
+    allOf:
+      - $ref: "#/definitions/resendOtp"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "otp resended successfullly"    
+            
+  verifyOtp:
+    allOf:
+      - $ref: "#/definitions/verifyOtp"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "otp verified successfullly"    
+
+  loginSave:
+    allOf:
+      - $ref: "#/definitions/loginSave"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "logged in successfullly" 
+
+  socialloginSave:
+    allOf:
+      - $ref: "#/definitions/socialloginSave"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "logged in successfullly"             
+            
+  forgotPassword:
+    allOf:
+      - $ref: "#/definitions/forgotPassword"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "password resend on email"      
+
+
+  latestproductsSave:
+    allOf:
+      - $ref: "#/definitions/latestproductsSave"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "get latest products"     
+
+  productsGet:
+    allOf:
+      - $ref: "#/definitions/productsGet"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "get products"  
+
+  productDetail:
+    allOf:
+      - $ref: "#/definitions/productDetail"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "get single product detail"  
+
+  cartGet:
+    allOf:
+      - $ref: "#/definitions/cartGet"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "cart retrived successfullly!" 
+
+  cartAdd:
+    allOf:
+      - $ref: "#/definitions/cartAdd"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "add to cart successfullly!"      
+
+  cartUpdate:
+    allOf:
+      - $ref: "#/definitions/cartUpdate"
+      - type: object
+      - post:
+        properties:
+           message:
+            type: string
+            example: "update cart successfullly!"       
+
+  cartDelete:
+    allOf:
+      - $ref: "#/definitions/cartDelete"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "cart deleted successfullly!"  
+            
+  addressGet:
+    allOf:
+      - $ref: "#/definitions/addressGet"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "address retrived successfullly!" 
+
+  addressAdd:
+    allOf:
+      - $ref: "#/definitions/addressAdd"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "address added successfullly!"      
+
+  addressUpdate:
+    allOf:
+      - $ref: "#/definitions/addressUpdate"
+      - type: object
+      - post:
+        properties:
+           message:
+            type: string
+            example: "update address successfullly!"    
+            
+  addressShow:
+    allOf:
+      - $ref: "#/definitions/addressShow"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "address retrived successfullly!"            
+
+  addressDelete:
+    allOf:
+      - $ref: "#/definitions/addressDelete"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "address deleted successfullly!"
+
+  getCoupons:
+    allOf:
+      - $ref: "#/definitions/getCoupons"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "coupons retrived successfullly!"
+
+  getCheckoutInfo:
+    allOf:
+      - $ref: "#/definitions/getCheckoutInfo"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "checkout info retrived successfullly!"
+
+
+  deliveryCharge:
+    allOf:
+      - $ref: "#/definitions/deliveryCharge"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "delivery charge retrived successfullly!"
+
+  checkOrder:
+    allOf:
+      - $ref: "#/definitions/checkOrder"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "you can checkout"
+
+
+  applyCoupon:
+    allOf:
+      - $ref: "#/definitions/applyCoupon"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "coupon applied successfullly!"
+
+
+  placeOrder:
+    allOf:
+      - $ref: "#/definitions/placeOrder"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "order placed successfullly!"
+
+  getOrders:
+    allOf:
+      - $ref: "#/definitions/getOrders"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "user Orders  retrived successfullly!"
+
+  Notification:
+    allOf:
+      - $ref: "#/definitions/Notification"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "Notification  retrived successfullly!"
+
+
+  NotificationUnreadCount:
+    allOf:
+      - $ref: "#/definitions/NotificationUnreadCount"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "Notification unread count retrived successfullly!"
+
+
+  
+
+  
