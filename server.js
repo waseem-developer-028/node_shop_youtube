@@ -88,10 +88,10 @@ const closeHandler = () => {
     .values(connections)
     .forEach((connection) => connection.close());
 
-  server.close(() => {
-    console.log('Server is stopped succesfully');
-    process.exit(0); /* eslint-disable-line */
-  });
+  // server.close(() => {
+  //   console.log('Server is stopped succesfully');
+  //   process.exit(0); /* eslint-disable-line */
+  // });
 };
 
 process.on('SIGTERM', closeHandler);
