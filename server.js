@@ -98,7 +98,7 @@ process.on('SIGTERM', closeHandler);
 process.on('SIGINT', closeHandler);
 
 //for jest testing
-module.exports = server
+module.exports = app
 
 
 
