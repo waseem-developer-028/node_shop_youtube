@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+const nodeMailer = require("nodemailer");
 const { renderFile } = require("ejs");
 const path = require("path");
 
