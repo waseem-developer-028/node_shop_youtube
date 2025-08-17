@@ -115,9 +115,15 @@ const chromium = require('chrome-aws-lambda');
 const puppeteer = require('puppeteer-core');
 
 async function generatePdfBuffer(html) {
+  let executablePath = await chromium.executablePath;
+  if (!executablePath) {
+    // fallback for local development
+    const puppeteerLocal = require('puppeteer');
+    executablePath = puppeteerLocal.executablePath();
+  }
   const browser = await puppeteer.launch({
     args: chromium.args,
-    executablePath: await chromium.executablePath,
+    executablePath,
     headless: chromium.headless,
   });
   const page = await browser.newPage();
@@ -149,7 +155,7 @@ const index = async (req, res) => {
     const payment_method = orderInfo.transaction_detail.payment_method_types[0];
 
     let fileName = `${orderInfo.order_id}_orderinvoice.pdf`;
-    let image_url = `${process.env.APP_URL}/image/weblogo.png`;
+    let image_url = `${process.env.APP_IMAGE_URL}/image/weblogo.png`;
     let order_time = moment.utc(orderInfo.createdAt).tz(timezone);
     order_time = moment(order_time).format('DD-MMM-YYYY h:mm A');
     let web_url = process.env.WEB_URL;
