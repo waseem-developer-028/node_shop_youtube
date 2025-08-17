@@ -23,7 +23,7 @@ var transporter = nodeMailer.createTransport({
 
        let htmlText = null
        try{
-       htmlText = await renderFile(appRoot + "/views/mail/"+text, sendData)
+       htmlText = await renderFile(appRootDir + "/views/mail/"+text, sendData)
        }
        catch(e){
          helper.myConsole("Email File Ejs Error="+e);
