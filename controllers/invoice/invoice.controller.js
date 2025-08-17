@@ -104,7 +104,6 @@
 // module.exports = {
 //     index
 //   };
-const puppeteer = require('puppeteer');
 const path = require("path");
 const { renderFile } = require("ejs");
 const ProductOrder = require("../../models/productOrder");
