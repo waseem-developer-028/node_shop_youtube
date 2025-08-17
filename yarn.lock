@@ -744,12 +744,10 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.16.7"
 
-"@babel/runtime@^7.12.0":
-  "integrity" "sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw=="
-  "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.15.4.tgz"
-  "version" "7.15.4"
-  dependencies:
-    "regenerator-runtime" "^0.13.4"
+"@babel/runtime@^7.17.2":
+  "integrity" "sha512-9uIQ10o0WGdpP6GDhXcdOJPJuDgFtIDtN/9+ArJQ2NAfAmiuhTQdzkaTGR33v43GYS2UrSA0eX2pPPHoFVvpxA=="
+  "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.28.3.tgz"
+  "version" "7.28.3"
 
 "@babel/template@^7.16.7", "@babel/template@^7.22.15", "@babel/template@^7.3.3":
   "integrity" "sha512-Bkf2q8lMB0AFpX0NFEqSbx1OkTHf0f+0j82mkw+ZpzBnkk7e9Ql0891vlfgi+kHwOk8tQjiQHpqh4LaSa0fKEA=="
@@ -2998,12 +2996,12 @@
   "resolved" "https://registry.npmjs.org/i18next-http-middleware/-/i18next-http-middleware-3.1.4.tgz"
   "version" "3.1.4"
 
-"i18next@^21.2.4":
-  "integrity" "sha512-+81XmiwJOLWJFjRZJK5ASFahAo5TXZGz5IrBT4CfLJ3CyXho61A1cj1Kmh8za8TYtGFou0cEkUSjEaqfya7Wfg=="
-  "resolved" "https://registry.npmjs.org/i18next/-/i18next-21.2.4.tgz"
-  "version" "21.2.4"
+"i18next@^21.10.0":
+  "integrity" "sha512-YeuIBmFsGjUfO3qBmMOc0rQaun4mIpGKET5WDwvu8lU7gvwpcariZLNtL0Fzj+zazcHUrlXHiptcFhBMFaxzfg=="
+  "resolved" "https://registry.npmjs.org/i18next/-/i18next-21.10.0.tgz"
+  "version" "21.10.0"
   dependencies:
-    "@babel/runtime" "^7.12.0"
+    "@babel/runtime" "^7.17.2"
 
 "iconv-lite@0.4.24":
   "integrity" "sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA=="
@@ -4059,10 +4057,10 @@
   "resolved" "https://registry.npmjs.org/node-releases/-/node-releases-2.0.2.tgz"
   "version" "2.0.2"
 
-"nodemailer@^6.6.3":
-  "integrity" "sha512-7o38Yogx6krdoBf3jCAqnIN4oSQFx+fMa0I7dK1D+me9kBxx12D+/33wSb+fhOCtIxvYJ+4x4IMEhmhCKfAiOA=="
-  "resolved" "https://registry.npmjs.org/nodemailer/-/nodemailer-6.9.13.tgz"
-  "version" "6.9.13"
+"nodemailer@^6.10.1":
+  "integrity" "sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA=="
+  "resolved" "https://registry.npmjs.org/nodemailer/-/nodemailer-6.10.1.tgz"
+  "version" "6.10.1"
 
 "nodemon@^3.1.0":
   "integrity" "sha512-xqlktYlDMCepBJd43ZQhjWwMw2obW/JRvkrLxq5RCNcuDDX1DbcPT+qT1IlIIdf+DhnWs90JpTMe+Y5KxOchvA=="
@@ -4444,11 +4442,6 @@
   "version" "3.6.0"
   dependencies:
     "picomatch" "^2.2.1"
-
-"regenerator-runtime@^0.13.4":
-  "integrity" "sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA=="
-  "resolved" "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz"
-  "version" "0.13.9"
 
 "request-progress@^2.0.1":
   "integrity" "sha512-dxdraeZVUNEn9AvLrxkgB2k6buTlym71dJk1fk4v8j3Ou3RKNm07BcgbHdj2lLgYGfqX71F+awb1MR+tWPFJzA=="
