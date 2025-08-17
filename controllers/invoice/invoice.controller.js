@@ -101,7 +101,7 @@ const Order = require("../../models/order");
 const _ = require("lodash");
 const moment = require("moment");
 const chromium = require("chrome-aws-lambda");
-const puppeteer = require("puppeteer-core");
+const puppeteerCore = require("puppeteer-core");
 
 // Generate PDF with Puppeteer
 async function generatePdf(html) {
