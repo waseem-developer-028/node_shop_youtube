@@ -111,20 +111,23 @@ const OrderCoupon = require("../../models/orderCoupon");
 const Order = require("../../models/order");
 const _ = require('lodash');
 const moment = require('moment');
-const chromium = require('chrome-aws-lambda');
+const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
 
 async function generatePdfBuffer(html) {
-  let executablePath = await chromium.executablePath;
-  if (!executablePath) {
-    // fallback for local development
-    const puppeteerLocal = require('puppeteer');
-    executablePath = puppeteerLocal.executablePath();
+  const isVercel = process.env.VERCEL === '1';
+  
+  // Configure Chrome for Vercel
+  if (isVercel) {
+    await chromium.font('/var/task/fonts/NotoSans-Regular.ttf');  // Optional: if you need custom fonts
   }
+  
   const browser = await puppeteer.launch({
     args: chromium.args,
-    executablePath,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(),
     headless: chromium.headless,
+    ignoreHTTPSErrors: true,
   });
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: 'networkidle0' });
