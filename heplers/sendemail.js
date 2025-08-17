@@ -17,20 +17,18 @@ console.log('Attempting email configuration with:', {
 });
 
 var transporter = nodeMailer.createTransport({
-    service: 'gmail',
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
+    requireTLS: true,
     auth: {
-        type: 'OAuth2',
         user: process.env.EMAIL_EMAIL,
         pass: process.env.EMAIL_PASS
     },
     tls: {
+        ciphers: 'SSLv3',
         rejectUnauthorized: false
-    },
-    debug: true,
-    logger: true
+    }
 });
 
        let htmlText = null
@@ -43,11 +41,13 @@ var transporter = nodeMailer.createTransport({
        }
     
   var mailOptions = {
-    from: process.env.EMAIL_FROM_EMAIL,
-    to:to,
-    subject:subject,
-    text:'',
-    html:htmlText,
+    from: {
+        name: 'Node Shop',
+        address: process.env.EMAIL_FROM_EMAIL
+    },
+    to: to,
+    subject: subject,
+    html: htmlText,
   };
 
      if(attachment!=null)
