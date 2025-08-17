@@ -5,49 +5,38 @@ const path = require('path')
 // Get the root directory for the application
 const appRootDir = path.resolve(process.cwd())
 
-const sendMail = async (to, subject, text, sendData = { test: 'test' }, attachment = null) => {
+const sendMail      = async (to,subject,text, sendData={test:'test'},attachment=null) =>{
  
 try{    
-// Log email configuration attempt (without sensitive data)
-console.log('Attempting email configuration with:', {
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: true,
-    hasAuth: !!process.env.EMAIL_EMAIL && !!process.env.EMAIL_PASS
-});
-
 var transporter = nodeMailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    auth: {
-        user: process.env.EMAIL_EMAIL,
-        pass: process.env.EMAIL_PASS
-    },
-    tls: {
-        ciphers: 'SSLv3',
-        rejectUnauthorized: false
-    }
-});
+        host:process.env.EMAIL_HOST,
+        port:process.env.EMAIL_PORT,
+        secure:process.env.SECURE,
+        // requireTls:true,
+        //cc:"test@gmail.com",
+        //bcc:"test@gmail.com",
+        auth:{
+            user:process.env.EMAIL_EMAIL,
+            pass:process.env.EMAIL_PASS
+        }
+  });
 
        let htmlText = null
-       try {
-         const templatePath = path.join(appRootDir, 'views', 'mail', text)
-         htmlText = await renderFile(templatePath, sendData)
-       } catch(e) {
-         console.error("Email template rendering error:", e)
-         throw new Error(`Failed to render email template: ${e.message}`)
+       try{
+       htmlText = await renderFile(appRoot + "/views/mail/"+text, sendData)
+       }
+       catch(e){
+         helper.myConsole("Email File Ejs Error="+e);
+         return e
        }
     
+  
   var mailOptions = {
-    from: {
-        name: 'Node Shop',
-        address: process.env.EMAIL_FROM_EMAIL
-    },
-    to: to,
-    subject: subject,
-    html: htmlText,
+    from: process.env.EMAIL_FROM_EMAIL,
+    to:to,
+    subject:subject,
+    text:'',
+    html:htmlText,
   };
 
      if(attachment!=null)
@@ -63,59 +52,20 @@ var transporter = nodeMailer.createTransport({
      }
 
  
-  try {
-    // Set a timeout for SMTP operations
-    const timeout = new Promise((resolve, reject) => {
-        setTimeout(() => reject(new Error('SMTP Operation timed out')), 30000); // 30 seconds timeout
-    });
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } 
+  });
 
-    // Verify SMTP connection first with timeout
-    console.log('Verifying SMTP connection...');
-    await Promise.race([
-        transporter.verify(),
-        timeout
-    ]);
-    console.log('SMTP Connection verified successfully');
-    
-    // Send email with timeout
-    const info = await Promise.race([
-        transporter.sendMail(mailOptions),
-        timeout
-    ]);
-
-    console.log('Email sent successfully:', {
-        messageId: info.messageId,
-        response: info.response,
-        accepted: info.accepted,
-        rejected: info.rejected,
-        envelope: info.envelope
-    });
-    return true;
-  } catch (error) {
-    // Log detailed error information
-    console.error('Email sending failed:', {
-        error: error.message,
-        code: error.code,
-        command: error.command,
-        response: error.response,
-        responseCode: error.responseCode,
-        stack: error.stack
-    });
-
-    // Check for specific error types
-    if (error.code === 'ECONNECTION' || error.code === 'ETIMEDOUT') {
-        throw new Error('Failed to connect to email server. Please check your network connection.');
-    } else if (error.code === 'EAUTH') {
-        throw new Error('Email authentication failed. Please check your credentials.');
-    } else {
-        throw new Error(`Failed to send email: ${error.message}`);
-  }
 }
-}
+
 catch(e){
-    console.error("Send Email Error:", e)
-    throw e
+    console.log("Send Email Error="+e);
+    return e
 }
+
+  return true
 
 }
 
