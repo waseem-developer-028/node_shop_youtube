@@ -73,7 +73,7 @@
                                 <td
                                     style="padding: 20px 8px; vertical-align: middle; text-align: right; font-family:arial, 'helvetica neue', helvetica, sans-serif;border-top:1px solid #E0E0E0">
                                     <span>
-                                        <%=row.price.toFixed(2)%>
+                                        ₹ <%=row.price.toFixed(2)%>
                                     </span>
                                 </td>
                             </tr>
@@ -96,7 +96,7 @@
                                 </td>
                                 <td
                                     style="padding: 20px 8px; color:#828282; vertical-align: middle; text-align: right; font-family:arial, 'helvetica neue', helvetica, sans-serif;border-top:1px solid #E0E0E0">
-                                    <%=subtotal%>
+                                    ₹ <%=subtotal%>
                                 </td>
                             </tr>
                             <tr style="font-size: 20px;">
@@ -110,7 +110,7 @@
                                 </td>
                                 <td
                                     style="padding: 20px 8px; color:#828282; vertical-align: middle; text-align: right; font-family:arial, 'helvetica neue', helvetica, sans-serif; border-top:1px solid #E0E0E0">
-                                    <%=orderInfo.delivery_charge.toFixed(2)%> </td>
+                                    ₹ <%=orderInfo.delivery_charge.toFixed(2)%> </td>
                             </tr>
 
 
@@ -133,7 +133,7 @@
                                 </td>
                                 <td
                                     style="padding: 20px 8px; color:#828282; vertical-align: middle; text-align: right; font-family:arial, 'helvetica neue', helvetica, sans-serif; border-top:1px solid #E0E0E0">
-                                    -<%=coupon.user_coupon_id.coupon_amount.toFixed(2)%> 
+                                    -₹ <%=coupon.user_coupon_id.coupon_amount.toFixed(2)%> 
                                 </td>
                             </tr>
 
@@ -159,8 +159,7 @@
                                 </td>
                                 <td
                                     style="padding: 20px 8px; vertical-align: middle; text-align: right; font-family:arial, 'helvetica neue', helvetica, sans-serif; border-top:1px solid #333333; border-bottom: 1px solid #333333;">
-                                    <span style="font-family: DejaVu Sans sans-serif;">&#8377;
-                                        <%=total%> </span>
+                                    <strong>₹ <%=total%></strong>
                                 </td>
                             </tr>
                         </tfoot>
