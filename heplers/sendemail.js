@@ -1,51 +1,47 @@
-const nodeMailer = require("nodemailer");
+const nodemailer = require("nodemailer");
 const { renderFile } = require("ejs");
 const path = require("path");
 
-// Get the root directory for the application
+// Get the root directory
 const appRootDir = path.resolve(process.cwd());
 
 const sendMail = async (
   to,
   subject,
-  text,
-  sendData = { test: "test" },
+  templateFile, // e.g. "welcome.ejs"
+  sendData = {},
   attachment = null
 ) => {
   try {
-    var transporter = nodeMailer.createTransport({
+    // Setup transporter
+    const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      secure: process.env.EMAIL_SECURE,
-      // requireTls:true,
-      //cc:"test@gmail.com",
-      //bcc:"test@gmail.com",
+      port: parseInt(process.env.EMAIL_PORT, 10),
+      secure: process.env.EMAIL_SECURE === "true",
       auth: {
         user: process.env.EMAIL_EMAIL,
         pass: process.env.EMAIL_PASS,
       },
     });
 
-    let htmlText = null;
+    // Render EJS template to HTML
+    let htmlText;
     try {
-     // htmlText = await renderFile(appRootDir + "/views/mail/" + text, sendData);
-      htmlText = await renderFile(path.join(appRootDir, "views", "mail", text), sendData)
+      const templatePath = path.join(appRootDir, "views", "mail", templateFile);
+      htmlText = await renderFile(templatePath, sendData);
     } catch (e) {
-      helper.myConsole("Email File Ejs Error=" + e);
+      console.error("EJS Render Error:", e);
       return e;
     }
 
-    var mailOptions = {
+    // Email options
+    const mailOptions = {
       from: process.env.EMAIL_FROM_EMAIL,
-      to: to,
-      subject: subject,
-      text: "",
+      to,
+      subject,
+      text: '',
       html: htmlText,
-    };
-
-    if (attachment != null) {
-      mailOptions = {
-        ...mailOptions,
+      ...(attachment && {
         attachments: [
           {
             filename: attachment.filename,
@@ -53,20 +49,18 @@ const sendMail = async (
             contentType: attachment.contentType,
           },
         ],
-      };
-    }
+      }),
+    };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-      }
-    });
-  } catch (e) {
-    console.log("Send Email Error=" + e);
-    return e;
+    // Send email
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent:", info.response);
+    return true;
+
+  } catch (err) {
+    console.error("Send Email Error:", err);
+    return err;
   }
-
-  return true;
 };
 
 module.exports = sendMail;
