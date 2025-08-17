@@ -141,7 +141,11 @@ async function generatePdfBuffer(html) {
       right: '20px',
       bottom: '20px',
       left: '20px'
-    }
+    },
+    scale: 1,
+    landscape: false,
+    displayHeaderFooter: false,
+    timeout: 30000
   });
   await browser.close();
   return buffer;
@@ -186,15 +190,34 @@ const index = async (req, res) => {
 
     const pdfBuffer = await generatePdfBuffer(html);
 
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="${fileName}"`,
-      'Content-Length': pdfBuffer.length
-    });
-    res.send(pdfBuffer);
+    // Set proper headers for PDF download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('Content-Length', pdfBuffer.length);
+    
+    // Prevent caching
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', 0);
+
+    // Send the buffer
+    res.end(pdfBuffer);
   } catch (e) {
-    console.log('===', e);
-    helper.sendError({}, res, e.message, 200);
+    console.error('PDF Generation Error:', e);
+    
+    // Check if headers are already sent
+    if (!res.headersSent) {
+      if (e.message.includes('timeout') || e.message.includes('ETIMEDOUT')) {
+        helper.sendError({}, res, 'PDF generation timed out. Please try again.', 408);
+      } else if (e.message.includes('memory')) {
+        helper.sendError({}, res, 'Server is busy. Please try again later.', 503);
+      } else {
+        helper.sendError({}, res, 'Failed to generate PDF. Please try again.', 500);
+      }
+    } else {
+      // If headers are already sent, we need to end the response
+      res.end();
+    }
   }
 };
 
