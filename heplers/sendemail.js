@@ -111,7 +111,7 @@ var transporter = nodeMailer.createTransport({
         throw new Error(`Failed to send email: ${error.message}`);
   }
 }
-
+}
 catch(e){
     console.error("Send Email Error:", e)
     throw e
