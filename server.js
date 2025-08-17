@@ -16,6 +16,9 @@ const swaggerDocument = YAML.load(path.join(__dirname, 'swagger.yaml'));
 const app = express()
 const cors = require('cors')
 
+// Trust proxy for Vercel deployment
+app.set('trust proxy', true)
+
 global.appRoot = path.join(__dirname)
 
 
