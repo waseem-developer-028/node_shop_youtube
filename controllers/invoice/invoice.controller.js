@@ -25,12 +25,16 @@
 // const index = async(req, res) => {
 //   try{
 
+  
+
 //     const { order_id } = req.query
 
-//     const timezone     = req.body.timezone || 'Asia/Kolkata'
+//     const timezone     = req.body.timezone || 'Asia/Kolkata' 
 
 //     if(_.isEmpty(order_id))
 //     return helper.sendError({}, res, req.t("invalid_order"), 200)
+
+    
 
 //     const orderInfo = await Order.findById(order_id).populate({ path: 'transaction_id', select: 'payment_method' })
 
@@ -50,14 +54,20 @@
 
 //     //  if(orderInfo.transaction_id.payment_method=='stripe')
 //     //    {
-//     //     payment_method = 'Card *** '+orderInfo.transaction_detail.payment_method_details.card.last4
+//     //     payment_method = 'Card *** '+orderInfo.transaction_detail.payment_method_details.card.last4  
 //     //    }
 //     //   else{
 //     //     payment_method = "Coupon"
-//     //   }
+//     //   } 
+
+     
+
+
+
+     
 
 //     let fileName = `${orderInfo.order_id}_orderinvoice.pdf`;
-
+   
 //     let image_url = `${process.env.APP_URL}/image/weblogo.png`
 
 //     let order_time = moment.utc(orderInfo.createdAt).tz(timezone)
@@ -65,7 +75,7 @@
 //     order_time = moment(order_time).format('DD-MMM-YYYY h:mm A')
 
 //     let web_url = process.env.WEB_URL
-
+  
 //   let html = await renderFile(appRoot + "/views/mail/orderpdf.ejs", { products: products, payment_method: payment_method,orderInfo: orderInfo, order_time: order_time, coupon: coupon, image_url: image_url, web_url: web_url})
 
 //   let options = { format: 'A4' };
@@ -75,8 +85,9 @@
 //   const directory = appRoot+'/public/docs';
 
 //   const file = `${appRoot}/public/docs/${fileName}`;
-//   res.download(file, fileName);
+//   res.download(file, fileName); 
 
+  
 //   //unlink file after successful download
 //   setTimeout(() => {
 //     fs.unlink(path.join(directory, fileName), err => {
@@ -93,105 +104,77 @@
 // module.exports = {
 //     index
 //   };
+let pdf  = require("html-pdf")
+const path = require("path")
+const { renderFile} = require("ejs")
+const ProductOrder = require("../../models/productOrder")
+const OrderCoupon = require("../../models/orderCoupon")
+const Order = require("../../models/order")
+const _ = require('lodash')
+const moment = require('moment')
 
-const { renderFile } = require("ejs");
-const ProductOrder = require("../../models/productOrder");
-const OrderCoupon = require("../../models/orderCoupon");
-const Order = require("../../models/order");
-const _ = require("lodash");
-const moment = require("moment");
-const chromium = require("chrome-aws-lambda");
-const puppeteerCore = require("puppeteer-core");
-
-// Generate PDF with Puppeteer
-async function generatePdf(html) {
-  let browser;
-
-  
-     const executablePath = await chromium.executablePath;
-    browser = await puppeteerCore.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath,
-      headless: chromium.headless,
+// Generate PDF as buffer (in-memory)
+function generatePdfBuffer(html, options) {
+  return new Promise(function(resolve, reject) {
+    pdf.create(html, options).toBuffer(function(err, buffer) {
+      if (err) reject(err);
+      else resolve(buffer);
     });
-  const page = await browser.newPage();
-  await page.setContent(html, { waitUntil: "networkidle0" });
-
-  const pdfBuffer = await page.pdf({ format: "A4" });
-  await browser.close();
-
-  return pdfBuffer;
+  });
 }
 
-const index = async (req, res) => {
+const index = async(req, res) => {
   try {
-    const { order_id } = req.query;
-    const timezone = req.body.timezone || "Asia/Kolkata";
+    const { order_id } = req.query
+    const timezone = req.body.timezone || 'Asia/Kolkata'
 
-    if (_.isEmpty(order_id)) {
-      return helper.sendError({}, res, req.t("invalid_order"), 200);
-    }
+    if (_.isEmpty(order_id))
+      return helper.sendError({}, res, req.t("invalid_order"), 200)
 
-    // Fetch order details
-    const orderInfo = await Order.findById(order_id).populate({
-      path: "transaction_id",
-      select: "payment_method",
-    });
+    const orderInfo = await Order.findById(order_id).populate({ path: 'transaction_id', select: 'payment_method' })
+    if (!orderInfo)
+      return helper.sendError({}, res, req.t("invalid_order"), 200)
 
-    if (!orderInfo) {
-      return helper.sendError({}, res, req.t("invalid_order"), 200);
-    }
+    const products = await ProductOrder.find({ order_id: helper.ObjectId(order_id) }).populate({ path: 'product_id', select: 'name' })
+    const CouponOrder = await OrderCoupon.findOne({ order_id: helper.ObjectId(order_id) }).populate({ path: 'user_coupon_id', select: 'coupon_amount', populate: {
+      path: 'coupon_id',
+      select: 'title'
+    } })
+    let coupon = (!CouponOrder) ? null : CouponOrder
 
-    const products = await ProductOrder.find({
-      order_id: helper.ObjectId(order_id),
-    }).populate({ path: "product_id", select: "name" });
+    const payment_method = orderInfo.transaction_detail.payment_method_types[0]
 
-    const CouponOrder = await OrderCoupon.findOne({
-      order_id: helper.ObjectId(order_id),
-    }).populate({
-      path: "user_coupon_id",
-      select: "coupon_amount",
-      populate: { path: "coupon_id", select: "title" },
-    });
+    let fileName = `${orderInfo.order_id}_orderinvoice.pdf`
+    let image_url = `${process.env.APP_URL}/image/weblogo.png`
+    let order_time = moment.utc(orderInfo.createdAt).tz(timezone)
+    order_time = moment(order_time).format('DD-MMM-YYYY h:mm A')
+    let web_url = process.env.WEB_URL
 
-    let coupon = !CouponOrder ? null : CouponOrder;
-
-    const payment_method = orderInfo.transaction_detail.payment_method_types[0];
-
-    // File name for download
-    let fileName = `${orderInfo.order_id}_orderinvoice.pdf`;
-
-    // Extra data for template
-    let image_url = `${process.env.APP_URL}/image/weblogo.png`;
-    let order_time = moment.utc(orderInfo.createdAt).tz(timezone);
-    order_time = moment(order_time).format("DD-MMM-YYYY h:mm A");
-    let web_url = process.env.WEB_URL;
-
-    // Render EJS template
     let html = await renderFile(appRoot + "/views/mail/orderpdf.ejs", {
-      products,
-      payment_method,
-      orderInfo,
-      order_time,
-      coupon,
-      image_url,
-      web_url,
-    });
+      products: products,
+      payment_method: payment_method,
+      orderInfo: orderInfo,
+      order_time: order_time,
+      coupon: coupon,
+      image_url: image_url,
+      web_url: web_url
+    })
 
-    // Generate PDF Buffer
-    const pdfBuffer = await generatePdf(html);
+    let options = { format: 'A4' }
+    const pdfBuffer = await generatePdfBuffer(html, options)
 
-    // Stream to client
-    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
-    res.setHeader("Content-Type", "application/pdf");
-    res.end(pdfBuffer);
-  } catch (e) {
-    console.error("=== PDF Error ===", e);
-    helper.sendError({}, res, e.message, 200);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${fileName}"`,
+      'Content-Length': pdfBuffer.length
+    })
+    res.send(pdfBuffer)
+  } catch(e) {
+    console.log('===', e)
+    helper.sendError({}, res, e.message, 200)
   }
-};
+}
 
 module.exports = {
-  index,
-};
+  index
+}
