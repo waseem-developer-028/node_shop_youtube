@@ -22,11 +22,15 @@ var transporter = nodeMailer.createTransport({
     port: 465,
     secure: true,
     auth: {
+        type: 'OAuth2',
         user: process.env.EMAIL_EMAIL,
         pass: process.env.EMAIL_PASS
     },
-    debug: true, // Enable debug logging
-    logger: true  // Log to console
+    tls: {
+        rejectUnauthorized: false
+    },
+    debug: true,
+    logger: true
 });
 
        let htmlText = null
@@ -60,27 +64,51 @@ var transporter = nodeMailer.createTransport({
 
  
   try {
-    // Verify SMTP connection first
-    await transporter.verify();
+    // Set a timeout for SMTP operations
+    const timeout = new Promise((resolve, reject) => {
+        setTimeout(() => reject(new Error('SMTP Operation timed out')), 30000); // 30 seconds timeout
+    });
+
+    // Verify SMTP connection first with timeout
+    console.log('Verifying SMTP connection...');
+    await Promise.race([
+        transporter.verify(),
+        timeout
+    ]);
     console.log('SMTP Connection verified successfully');
     
-    const info = await transporter.sendMail(mailOptions);
+    // Send email with timeout
+    const info = await Promise.race([
+        transporter.sendMail(mailOptions),
+        timeout
+    ]);
+
     console.log('Email sent successfully:', {
         messageId: info.messageId,
         response: info.response,
         accepted: info.accepted,
-        rejected: info.rejected
+        rejected: info.rejected,
+        envelope: info.envelope
     });
     return true;
   } catch (error) {
+    // Log detailed error information
     console.error('Email sending failed:', {
         error: error.message,
         code: error.code,
         command: error.command,
         response: error.response,
-        responseCode: error.responseCode
+        responseCode: error.responseCode,
+        stack: error.stack
     });
-    throw new Error(`Failed to send email: ${error.message}`);
+
+    // Check for specific error types
+    if (error.code === 'ECONNECTION' || error.code === 'ETIMEDOUT') {
+        throw new Error('Failed to connect to email server. Please check your network connection.');
+    } else if (error.code === 'EAUTH') {
+        throw new Error('Email authentication failed. Please check your credentials.');
+    } else {
+        throw new Error(`Failed to send email: ${error.message}`);
   }
 }
 
