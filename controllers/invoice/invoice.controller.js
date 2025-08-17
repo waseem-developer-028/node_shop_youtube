@@ -107,13 +107,15 @@ const puppeteer = require("puppeteer-core");
 async function generatePdf(html) {
   let browser;
 
-  // ✅ Running on Vercel
-  browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath, // must not be null on Vercel
-    headless: chromium.headless,
-  });
+  
+    const executablePath = await chromium.executablePath;
+
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath,
+      headless: true,
+    });
 
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
