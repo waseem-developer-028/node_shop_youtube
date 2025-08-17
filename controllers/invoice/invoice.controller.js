@@ -108,15 +108,13 @@ async function generatePdf(html) {
   let browser;
 
   
-    const executablePath = await chromium.executablePath;
-
-    browser = await puppeteer.launch({
+     const executablePath = await chromium.executablePath;
+    browser = await puppeteerCore.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath,
-      headless: true,
+      headless: chromium.headless,
     });
-
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
 
