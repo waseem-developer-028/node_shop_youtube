@@ -8,18 +8,26 @@ const appRootDir = path.resolve(process.cwd())
 const sendMail = async (to, subject, text, sendData = { test: 'test' }, attachment = null) => {
  
 try{    
+// Log email configuration attempt (without sensitive data)
+console.log('Attempting email configuration with:', {
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: true,
+    hasAuth: !!process.env.EMAIL_EMAIL && !!process.env.EMAIL_PASS
+});
+
 var transporter = nodeMailer.createTransport({
-        host:process.env.EMAIL_HOST,
-        port:process.env.EMAIL_PORT,
-        secure:process.env.SECURE,
-        // requireTls:true,
-        //cc:"test@gmail.com",
-        //bcc:"test@gmail.com",
-        auth:{
-            user:process.env.EMAIL_EMAIL,
-            pass:process.env.EMAIL_PASS
-        }
-  });
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.EMAIL_EMAIL,
+        pass: process.env.EMAIL_PASS
+    },
+    debug: true, // Enable debug logging
+    logger: true  // Log to console
+});
 
        let htmlText = null
        try {
@@ -52,12 +60,27 @@ var transporter = nodeMailer.createTransport({
 
  
   try {
-    const info = await transporter.sendMail(mailOptions)
-    console.log('Email sent successfully:', info.messageId)
-    return true
+    // Verify SMTP connection first
+    await transporter.verify();
+    console.log('SMTP Connection verified successfully');
+    
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully:', {
+        messageId: info.messageId,
+        response: info.response,
+        accepted: info.accepted,
+        rejected: info.rejected
+    });
+    return true;
   } catch (error) {
-    console.error('Email sending failed:', error)
-    throw new Error(`Failed to send email: ${error.message}`)
+    console.error('Email sending failed:', {
+        error: error.message,
+        code: error.code,
+        command: error.command,
+        response: error.response,
+        responseCode: error.responseCode
+    });
+    throw new Error(`Failed to send email: ${error.message}`);
   }
 }
 
