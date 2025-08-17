@@ -36,6 +36,17 @@ app.options('*', cors())
 
 app.use(bodyParser.json({ limit: '2mb' }))
 app.use(bodyParser.urlencoded({ extended: true }))
+
+// Import rate limiters
+const { apiLimiter, authLimiter } = require('./middlewares/rate-limit')
+
+// Apply rate limiting to all routes under /v1
+app.use('/v1', apiLimiter)
+
+// Apply stricter rate limiting to authentication routes
+app.use('/v1/user/login', authLimiter)
+app.use('/v1/user/register', authLimiter)
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 
