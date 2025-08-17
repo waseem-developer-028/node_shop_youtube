@@ -16,7 +16,7 @@ const sendMail = async (
     var transporter = nodeMailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,
-      secure: process.env.SECURE,
+      secure: process.env.EMAIL_SECURE,
       // requireTls:true,
       //cc:"test@gmail.com",
       //bcc:"test@gmail.com",
