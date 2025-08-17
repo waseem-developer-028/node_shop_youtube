@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=display-width, initial-scale=1.0, maximum-scale=1.0," />
     <title>Eyewear</title>
     <style>
-        @font-face {
-            font-family: 'Arial Unicode MS';
-            src: url('https://db.onlinewebfonts.com/t/0face7fa72dda72150ba5660b9fdd1d4.eot');
+        .amount {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
         .rupee {
-            font-family: 'Arial Unicode MS', 'Arial', sans-serif;
+            font-weight: normal;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
     </style>
 </head>
@@ -81,8 +81,8 @@
                                 </td>
                                 <td
                                     style="padding: 20px 8px; vertical-align: middle; text-align: right; font-family:arial, 'helvetica neue', helvetica, sans-serif;border-top:1px solid #E0E0E0">
-                                    <span class="rupee">
-                                        <span style="font-family: 'Arial Unicode MS', Arial;">&#8377;</span> <%=row.price.toFixed(2)%>
+                                    <span class="amount">
+                                        <span class="rupee">Rs.</span> <%=row.price.toFixed(2)%>
                                     </span>
                                 </td>
                             </tr>
@@ -105,7 +105,7 @@
                                 </td>
                                 <td
                                     style="padding: 20px 8px; color:#828282; vertical-align: middle; text-align: right; font-family:arial, 'helvetica neue', helvetica, sans-serif;border-top:1px solid #E0E0E0">
-                                    <span class="rupee">&#8377;</span> <%=subtotal%>
+                                    <span class="amount"><span class="rupee">Rs.</span> <%=subtotal%></span>
                                 </td>
                             </tr>
                             <tr style="font-size: 20px;">
@@ -119,7 +119,7 @@
                                 </td>
                                 <td
                                     style="padding: 20px 8px; color:#828282; vertical-align: middle; text-align: right; font-family:arial, 'helvetica neue', helvetica, sans-serif; border-top:1px solid #E0E0E0">
-                                    <span class="rupee">&#8377;</span> <%=orderInfo.delivery_charge.toFixed(2)%> </td>
+                                    <span class="amount"><span class="rupee">Rs.</span> <%=orderInfo.delivery_charge.toFixed(2)%></span> </td>
                             </tr>
 
 
@@ -142,7 +142,7 @@
                                 </td>
                                 <td
                                     style="padding: 20px 8px; color:#828282; vertical-align: middle; text-align: right; font-family:arial, 'helvetica neue', helvetica, sans-serif; border-top:1px solid #E0E0E0">
-                                    -<span class="rupee">&#8377;</span> <%=coupon.user_coupon_id.coupon_amount.toFixed(2)%> 
+                                    <span class="amount">-<span class="rupee">Rs.</span> <%=coupon.user_coupon_id.coupon_amount.toFixed(2)%></span> 
                                 </td>
                             </tr>
 
@@ -168,7 +168,7 @@
                                 </td>
                                 <td
                                     style="padding: 20px 8px; vertical-align: middle; text-align: right; font-family:arial, 'helvetica neue', helvetica, sans-serif; border-top:1px solid #333333; border-bottom: 1px solid #333333;">
-                                    <strong><span class="rupee">&#8377;</span> <%=total%></strong>
+                                    <strong class="amount"><span class="rupee">Rs.</span> <%=total%></strong>
                                 </td>
                             </tr>
                         </tfoot>
