@@ -104,51 +104,54 @@
 // module.exports = {
 //     index
 //   };
-let pdf  = require("html-pdf")
-const path = require("path")
-const { renderFile} = require("ejs")
-const ProductOrder = require("../../models/productOrder")
-const OrderCoupon = require("../../models/orderCoupon")
-const Order = require("../../models/order")
-const _ = require('lodash')
-const moment = require('moment')
+const puppeteer = require('puppeteer');
+const path = require("path");
+const { renderFile } = require("ejs");
+const ProductOrder = require("../../models/productOrder");
+const OrderCoupon = require("../../models/orderCoupon");
+const Order = require("../../models/order");
+const _ = require('lodash');
+const moment = require('moment');
 
-// Generate PDF as buffer (in-memory)
-function generatePdfBuffer(html, options) {
-  return new Promise(function(resolve, reject) {
-    pdf.create(html, options).toBuffer(function(err, buffer) {
-      if (err) reject(err);
-      else resolve(buffer);
-    });
+// Generate PDF as buffer (in-memory) using puppeteer
+async function generatePdfBuffer(html) {
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    headless: true
   });
+  const page = await browser.newPage();
+  await page.setContent(html, { waitUntil: 'networkidle0' });
+  const buffer = await page.pdf({ format: 'A4' });
+  await browser.close();
+  return buffer;
 }
 
-const index = async(req, res) => {
+const index = async (req, res) => {
   try {
-    const { order_id } = req.query
-    const timezone = req.body.timezone || 'Asia/Kolkata'
+    const { order_id } = req.query;
+    const timezone = req.body.timezone || 'Asia/Kolkata';
 
     if (_.isEmpty(order_id))
-      return helper.sendError({}, res, req.t("invalid_order"), 200)
+      return helper.sendError({}, res, req.t("invalid_order"), 200);
 
-    const orderInfo = await Order.findById(order_id).populate({ path: 'transaction_id', select: 'payment_method' })
+    const orderInfo = await Order.findById(order_id).populate({ path: 'transaction_id', select: 'payment_method' });
     if (!orderInfo)
-      return helper.sendError({}, res, req.t("invalid_order"), 200)
+      return helper.sendError({}, res, req.t("invalid_order"), 200);
 
-    const products = await ProductOrder.find({ order_id: helper.ObjectId(order_id) }).populate({ path: 'product_id', select: 'name' })
+    const products = await ProductOrder.find({ order_id: helper.ObjectId(order_id) }).populate({ path: 'product_id', select: 'name' });
     const CouponOrder = await OrderCoupon.findOne({ order_id: helper.ObjectId(order_id) }).populate({ path: 'user_coupon_id', select: 'coupon_amount', populate: {
       path: 'coupon_id',
       select: 'title'
-    } })
-    let coupon = (!CouponOrder) ? null : CouponOrder
+    } });
+    let coupon = (!CouponOrder) ? null : CouponOrder;
 
-    const payment_method = orderInfo.transaction_detail.payment_method_types[0]
+    const payment_method = orderInfo.transaction_detail.payment_method_types[0];
 
-    let fileName = `${orderInfo.order_id}_orderinvoice.pdf`
-    let image_url = `${process.env.APP_URL}/image/weblogo.png`
-    let order_time = moment.utc(orderInfo.createdAt).tz(timezone)
-    order_time = moment(order_time).format('DD-MMM-YYYY h:mm A')
-    let web_url = process.env.WEB_URL
+    let fileName = `${orderInfo.order_id}_orderinvoice.pdf`;
+    let image_url = `${process.env.APP_URL}/image/weblogo.png`;
+    let order_time = moment.utc(orderInfo.createdAt).tz(timezone);
+    order_time = moment(order_time).format('DD-MMM-YYYY h:mm A');
+    let web_url = process.env.WEB_URL;
 
     let html = await renderFile(appRoot + "/views/mail/orderpdf.ejs", {
       products: products,
@@ -158,23 +161,22 @@ const index = async(req, res) => {
       coupon: coupon,
       image_url: image_url,
       web_url: web_url
-    })
+    });
 
-    let options = { format: 'A4' }
-    const pdfBuffer = await generatePdfBuffer(html, options)
+    const pdfBuffer = await generatePdfBuffer(html);
 
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="${fileName}"`,
       'Content-Length': pdfBuffer.length
-    })
-    res.send(pdfBuffer)
-  } catch(e) {
-    console.log('===', e)
-    helper.sendError({}, res, e.message, 200)
+    });
+    res.send(pdfBuffer);
+  } catch (e) {
+    console.log('===', e);
+    helper.sendError({}, res, e.message, 200);
   }
-}
+};
 
 module.exports = {
   index
-}
+};
