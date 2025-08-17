@@ -25,16 +25,12 @@
 // const index = async(req, res) => {
 //   try{
 
-  
-
 //     const { order_id } = req.query
 
-//     const timezone     = req.body.timezone || 'Asia/Kolkata' 
+//     const timezone     = req.body.timezone || 'Asia/Kolkata'
 
 //     if(_.isEmpty(order_id))
 //     return helper.sendError({}, res, req.t("invalid_order"), 200)
-
-    
 
 //     const orderInfo = await Order.findById(order_id).populate({ path: 'transaction_id', select: 'payment_method' })
 
@@ -54,20 +50,14 @@
 
 //     //  if(orderInfo.transaction_id.payment_method=='stripe')
 //     //    {
-//     //     payment_method = 'Card *** '+orderInfo.transaction_detail.payment_method_details.card.last4  
+//     //     payment_method = 'Card *** '+orderInfo.transaction_detail.payment_method_details.card.last4
 //     //    }
 //     //   else{
 //     //     payment_method = "Coupon"
-//     //   } 
-
-     
-
-
-
-     
+//     //   }
 
 //     let fileName = `${orderInfo.order_id}_orderinvoice.pdf`;
-   
+
 //     let image_url = `${process.env.APP_URL}/image/weblogo.png`
 
 //     let order_time = moment.utc(orderInfo.createdAt).tz(timezone)
@@ -75,7 +65,7 @@
 //     order_time = moment(order_time).format('DD-MMM-YYYY h:mm A')
 
 //     let web_url = process.env.WEB_URL
-  
+
 //   let html = await renderFile(appRoot + "/views/mail/orderpdf.ejs", { products: products, payment_method: payment_method,orderInfo: orderInfo, order_time: order_time, coupon: coupon, image_url: image_url, web_url: web_url})
 
 //   let options = { format: 'A4' };
@@ -85,9 +75,8 @@
 //   const directory = appRoot+'/public/docs';
 
 //   const file = `${appRoot}/public/docs/${fileName}`;
-//   res.download(file, fileName); 
+//   res.download(file, fileName);
 
-  
 //   //unlink file after successful download
 //   setTimeout(() => {
 //     fs.unlink(path.join(directory, fileName), err => {
@@ -114,15 +103,15 @@ const moment = require("moment");
 const chromium = require("chrome-aws-lambda");
 const puppeteer = require("puppeteer-core");
 
-
 // Generate PDF with Puppeteer
 async function generatePdf(html) {
-  const executablePath = await chromium.executablePath;
+  let browser;
 
-  const browser = await puppeteer.launch({
+  // ✅ Running on Vercel
+  browser = await puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
-    executablePath,
+    executablePath: await chromium.executablePath, // must not be null on Vercel
     headless: chromium.headless,
   });
 
@@ -134,7 +123,6 @@ async function generatePdf(html) {
 
   return pdfBuffer;
 }
-
 
 const index = async (req, res) => {
   try {
@@ -195,10 +183,7 @@ const index = async (req, res) => {
     const pdfBuffer = await generatePdf(html);
 
     // Stream to client
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="${fileName}"`
-    );
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
     res.setHeader("Content-Type", "application/pdf");
     res.end(pdfBuffer);
   } catch (e) {
