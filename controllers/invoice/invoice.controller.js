@@ -115,23 +115,34 @@ const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
 
 async function generatePdfBuffer(html) {
-  const isVercel = process.env.VERCEL === '1';
-  
-  // Configure Chrome for Vercel
-  if (isVercel) {
-    await chromium.font('/var/task/fonts/NotoSans-Regular.ttf');  // Optional: if you need custom fonts
-  }
-  
   const browser = await puppeteer.launch({
-    args: chromium.args,
+    args: [
+      ...chromium.args,
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--font-render-hinting=none'
+    ],
     defaultViewport: chromium.defaultViewport,
     executablePath: await chromium.executablePath(),
-    headless: chromium.headless,
+    headless: true,
     ignoreHTTPSErrors: true,
   });
   const page = await browser.newPage();
-  await page.setContent(html, { waitUntil: 'networkidle0' });
-  const buffer = await page.pdf({ format: 'A4' });
+  await page.setContent(html, { 
+    waitUntil: 'networkidle0',
+    timeout: 30000
+  });
+  const buffer = await page.pdf({ 
+    format: 'A4',
+    printBackground: true,
+    preferCSSPageSize: true,
+    margin: {
+      top: '20px',
+      right: '20px',
+      bottom: '20px',
+      left: '20px'
+    }
+  });
   await browser.close();
   return buffer;
 }
