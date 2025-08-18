@@ -153,7 +153,7 @@ async function generatePdfBuffer(html) {
 
 const index = async (req, res) => {
   try {
-    const { order_id } = req.query;
+    const { order_id, web_url } = req.query;
     const timezone = req.body.timezone || 'Asia/Kolkata';
 
     if (_.isEmpty(order_id))
@@ -176,7 +176,6 @@ const index = async (req, res) => {
     let image_url = `${process.env.APP_IMAGE_URL}/image/weblogo.png`;
     let order_time = moment.utc(orderInfo.createdAt).tz(timezone);
     order_time = moment(order_time).format('DD-MMM-YYYY h:mm A');
-    let web_url = process.env.WEB_URL;
 
     let html = await renderFile(appRoot + "/views/mail/orderpdf.ejs", {
       products: products,

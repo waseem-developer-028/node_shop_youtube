@@ -577,9 +577,9 @@ const stripeSuccess = async (req, res) => {
       );
 
       // Redirect to a confirmation page in your frontend
-      return res.redirect(`${process.env.WEB_URL}/order?order_id=${order._id}`);
+      return res.redirect(`${session.metadata.web_url}?order_id=${order._id}`);
     } else {
-      return res.redirect(`${process.env.WEB_URL}/payment-failed`);
+      return res.redirect(`${session.metadata.web_url}?error=payment_failed`);
     }
   } catch (e) {
     return helper.sendError({}, res, e.message, 500);
@@ -683,6 +683,7 @@ const placeOrder = async (req, res) => {
         address_id: req.body.address_id,
         notes: req.body.notes || "",
         delivery_charge: deliveryCharge,
+        web_url: req.body.web_url || "",
       },
       payment_intent_data: {
         description: description,
