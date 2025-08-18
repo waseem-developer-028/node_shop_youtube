@@ -20,7 +20,7 @@ const addSubscriberData = async (req, res) => {
      let image_url = `${process.env.APP_IMAGE_URL}/image/weblogo.png`;
          //sending otp to user account
          /* istanbul ignore next */
-         sendEmail(email,"Eyewear New Letter","subscriber.ejs", {image_url:image_url})
+         await sendEmail(email,"Eyewear New Letter","subscriber.ejs", {image_url:image_url})
       /* istanbul ignore next */
        return helper.sendSuccess({}, res, req.t("subcriber_data"),200)
     

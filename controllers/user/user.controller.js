@@ -71,7 +71,7 @@ const resendOtp = async (req, res) => {
 
         let image_url = `${process.env.APP_IMAGE_URL}/image/weblogo.png`;
        //sending otp to user account
-       sendEmail(user.email,"Eyewear Account Verification","sendotp.ejs", {name:user.name,otp:otp, image_url:image_url})
+       await sendEmail(user.email,"Eyewear Account Verification","sendotp.ejs", {name:user.name,otp:otp, image_url:image_url})
 
        return helper.sendSuccess({}, res, req.t("otp_resend"),200)
 
@@ -199,7 +199,7 @@ const forgotPassword = async(req, res) =>
    user= await User.findOneAndUpdate({ _id:user._id }, { $set: {password:hashPassword} }, { new: true });
 
     let image_url = `${process.env.APP_IMAGE_URL}/image/weblogo.png`;
-   sendEmail(user.email,"Eyewear Forgot Password","sendpassword.ejs", {name:user.name,password:password, image_url:image_url})
+   await sendEmail(user.email,"Eyewear Forgot Password","sendpassword.ejs", {name:user.name,password:password, image_url:image_url})
 
    return helper.sendSuccess({}, res, req.t("password_sent"),200)
 
