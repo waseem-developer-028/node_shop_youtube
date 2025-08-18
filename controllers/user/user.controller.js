@@ -38,7 +38,7 @@ const register = async (req, res) => {
 
         let image_url = `${process.env.APP_IMAGE_URL}/image/weblogo.png`;
        //sending otp to user account
-       sendEmail(user.email,"Eyewear Account Verification","sendotp.ejs", {name:user.name,otp:otp, image_url:image_url})
+       await sendEmail(user.email,"Eyewear Account Verification","sendotp.ejs", {name:user.name,otp:otp, image_url:image_url})
 
        return helper.sendSuccess({}, res, req.t("register_save"),200)
 
