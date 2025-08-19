@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: "1.0.0"
   title: "Eyewear API"
-basePath: "/v1"
+basePath: "/api/v1"
 
 parameters:
   Authrization:
@@ -373,6 +373,35 @@ paths:
           description: "successfull operation"
           schema:
             $ref: "#/definitions/forgotPassword"  
+
+  /refreshtoken:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    post:
+      summary: "refresh token"
+      description: refesh token ApI
+      tags:
+        - User auth apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              user_id:
+                required: true
+                type: string
+                example: "6655bf4a002885850f5392cf"              
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/refreshToken"
 
   /latestproducts:
     parameters:
@@ -958,8 +987,8 @@ paths:
               payment_method:
                 required: true
                 type: string
-                example: stripe
-                default: stripe
+                example: razorpay
+                default: razorpay
               card:
                 required: true
                 type: number
@@ -1077,6 +1106,31 @@ paths:
           schema:
             $ref: "#/definitions/NotificationUnreadCount"
 
+  /orderinvoiceinfo:
+    parameters:
+      - $ref: '#/parameters/Authrization'
+      - $ref: '#/parameters/Timezone'
+      - $ref: '#/parameters/AcceptLanguage'
+    get:
+      summary: "Orders Invoice"
+      description: get order invoice data for app API
+      tags:
+        - OrderInvoice apis
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: order_id
+          type: string
+          required: true
+          example: 66576d762c9abb63ef20e9b2
+          default: 66576d762c9abb63ef20e9b2 
+      responses:
+        200:
+          description: "successfull operation"
+          schema:
+            $ref: "#/definitions/orderInvoice"
+
 definitions:
   Timestamp:
     type: object
@@ -1186,6 +1240,14 @@ definitions:
             type: string
             example: "password resend on email"      
 
+  refreshToken:
+    allOf:
+      - $ref: "#/definitions/refreshToken"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "data retrived successfullly"    
 
   latestproductsSave:
     allOf:
@@ -1381,6 +1443,16 @@ definitions:
            message:
             type: string
             example: "Notification unread count retrived successfullly!"
+
+  
+  orderInvoice:
+    allOf:
+      - $ref: "#/definitions/orderInvoice"
+      - type: object
+        properties:
+           message:
+            type: string
+            example: "Data retrived successfullly!"
 
 
   

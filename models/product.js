@@ -41,11 +41,6 @@ const productSchema = Schema({
   }
 }, { timestamps: true, strict:true});
 
-// Add indexes for commonly queried fields
-productSchema.index({ category: 1 });
-productSchema.index({ name: 1 });
-productSchema.index({ status: 1 });
-
 productSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Product", productSchema);

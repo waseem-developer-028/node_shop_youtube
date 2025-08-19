@@ -17,7 +17,9 @@ const addSubscriberData = async (req, res) => {
        return helper.sendException(res, req.t("something_is_wrong"),200)
 
        
-     let image_url = `${process.env.APP_IMAGE_URL}/image/weblogo.png`;
+         //sending otp to user account
+         /* istanbul ignore next */
+        let image_url = `${process.env.APP_IMAGE_URL}/image/weblogo.png`;
          //sending otp to user account
          /* istanbul ignore next */
          await sendEmail(email,"Eyewear New Letter","subscriber.ejs", {image_url:image_url})
