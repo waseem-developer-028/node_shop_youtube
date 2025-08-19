@@ -26,7 +26,25 @@ const i18next = require("i18next");
 const Backend = require("i18next-fs-backend");
 const langMiddleware = require("i18next-http-middleware");
 // mongodb configuration
-connectDB();
+
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log('MongoDB connected');
+  app.listen(process.env.PORT, async () => {
+    console.log(
+      `Server up successfully - host: ${process.env.HOST} port: ${process.env.PORT}`
+    );
+  });
+})
+.catch((err) => {
+  console.error('MongoDB connection error:', err);
+  process.exit(1);
+});
 
 app.use(
   helmet({
