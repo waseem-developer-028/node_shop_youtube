@@ -12,10 +12,9 @@ const localization = require("./middlewares/localization");
 const routes = require("./routes");
 const fileUpload = require("express-fileupload");
 const swaggerUi = require("swagger-ui-express");
-const fs = require('fs');
-const swaggerDocument = JSON.parse(
-  fs.readFileSync(path.join(process.cwd(), 'public', 'swagger.json'), 'utf8')
-);
+// const YAML = require("yamljs");
+// const swaggerDocument = YAML.load("./swagger.yaml");
+const swaggerDocument = require("./swagger.json");
 
 const app = express();
 const cors = require("cors");
@@ -114,7 +113,11 @@ app.use("/", routes);
 app.use(errorHandler.notFound);
 
 //server configuration
-// app.listen is now only called after MongoDB connection (see above)
+app.listen(process.env.PORT, async () => {
+  console.log(
+    `Server up successfully - host: ${process.env.HOST} port: ${process.env.PORT}`
+  );
+});
 
 process.on("unhandledRejection", (err) => {
   console.log("possibly unhandled rejection happened");
