@@ -179,24 +179,7 @@ const i18next = require('i18next')
 const Backend = require('i18next-fs-backend')
 const langMiddleware = require('i18next-http-middleware')
 // mongodb configuration
-const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log('MongoDB connected');
-  app.listen(process.env.PORT, async () => {
-    console.log(
-      `Server up successfully - host: ${process.env.HOST} port: ${process.env.PORT}`
-    );
-  });
-})
-.catch((err) => {
-  console.error('MongoDB connection error:', err);
-  process.exit(1);
-});
-
+connectDB();
 
 
 app.set("views", path.join(__dirname, "views"))
@@ -257,6 +240,10 @@ app.use(errorHandler.genericErrorHandler);
 
 
 //server configuration
+const server = app.listen(process.env.PORT, async () => {
+  console.log(`Server up successfully - host: ${process.env.HOST} port: ${process.env.PORT}`);
+});
+
 process.on('unhandledRejection', (err) => {
   console.log('possibly unhandled rejection happened');
   console.log(err.message);
@@ -267,7 +254,7 @@ const closeHandler = () => {
     .values(connections)
     .forEach((connection) => connection.close());
 
-  app.close(() => {
+  server.close(() => {
     console.log('Server is stopped succesfully');
     process.exit(0); /* eslint-disable-line */
   });
