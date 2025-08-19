@@ -179,6 +179,7 @@ const i18next = require('i18next')
 const Backend = require('i18next-fs-backend')
 const langMiddleware = require('i18next-http-middleware')
 // mongodb configuration
+const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
