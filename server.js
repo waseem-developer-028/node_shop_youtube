@@ -113,11 +113,7 @@ app.use("/", routes);
 app.use(errorHandler.notFound);
 
 //server configuration
-app.listen(process.env.PORT, async () => {
-  console.log(
-    `Server up successfully - host: ${process.env.HOST} port: ${process.env.PORT}`
-  );
-});
+// app.listen is now only called after MongoDB connection (see above)
 
 process.on("unhandledRejection", (err) => {
   console.log("possibly unhandled rejection happened");
