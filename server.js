@@ -12,9 +12,10 @@ const localization = require("./middlewares/localization");
 const routes = require("./routes");
 const fileUpload = require("express-fileupload");
 const swaggerUi = require("swagger-ui-express");
-// const YAML = require("yamljs");
-// const swaggerDocument = YAML.load("./swagger.yaml");
-const swaggerDocument = require("./swagger.json");
+const fs = require('fs');
+const swaggerDocument = JSON.parse(
+  fs.readFileSync(path.join(process.cwd(), 'public', 'swagger.json'), 'utf8')
+);
 
 const app = express();
 const cors = require("cors");
