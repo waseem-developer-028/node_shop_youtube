@@ -84,6 +84,11 @@ app.get("/", (req, res, next) => {
 app.use(errorHandler.genericErrorHandler);
 
 // API routes
+// Import rate limiters
+const { apiLimiter } = require('./middlewares/rate-limit')
+
+// Apply rate limiting to all routes under /v1
+app.use('/', apiLimiter)
 app.use("/", routes);
 
 //404 not found handle
