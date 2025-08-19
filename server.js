@@ -257,10 +257,6 @@ app.use(errorHandler.genericErrorHandler);
 
 
 //server configuration
-const server = app.listen(process.env.PORT, async () => {
-  console.log(`Server up successfully - host: ${process.env.HOST} port: ${process.env.PORT}`);
-});
-
 process.on('unhandledRejection', (err) => {
   console.log('possibly unhandled rejection happened');
   console.log(err.message);
@@ -271,7 +267,7 @@ const closeHandler = () => {
     .values(connections)
     .forEach((connection) => connection.close());
 
-  server.close(() => {
+  app.close(() => {
     console.log('Server is stopped succesfully');
     process.exit(0); /* eslint-disable-line */
   });
