@@ -12,6 +12,11 @@ const orderSchema = Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    stripe_session_id: {
+      type: String,
+      trim: true,
+      default: ''
+    },
     transaction_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Transaction",
@@ -45,7 +50,7 @@ const orderSchema = Schema(
       integer: true,
       get: (v) => Math.round(v),
       set: (v) => Math.round(v),
-      default: 1, // 1=placed 2=confirmed, 3=shipped, 4=delivered
+      default: 1, //1=confirmed, 2=shipped, 3=delivered
     },
   },
   { timestamps: true, strict: true }

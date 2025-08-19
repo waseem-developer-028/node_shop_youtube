@@ -76,21 +76,6 @@ const userSchema = Schema(
       type: String,
       default: null,
     },
-    social_id: {
-      type: String, //incase of social login
-      default: null,
-    },
-    login_type: {
-      type: Number, // 0=normal, 1=google, 2=facebook
-      integer: true,
-      get: (v) => Math.round(v),
-      set: (v) => Math.round(v),
-      default: 0,
-    },
-    image: {
-      type: String, //incase of social login
-      default: null,
-    },
     status: {
       type: Number,
       integer: true,

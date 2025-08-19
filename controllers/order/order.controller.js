@@ -527,7 +527,7 @@ const stripeSuccess = async (req, res) => {
     });
     if (existingOrder) {
       return res.redirect(
-        `${process.env.WEB_URL}/order?order_id=${existingOrder._id}`
+        `${process.env.WEB_URL}/order?order_id=${existingOrder._id}&ex=true`
       );
     }
 
