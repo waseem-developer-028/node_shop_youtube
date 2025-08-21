@@ -101,12 +101,12 @@ res.send(`
     <!DOCTYPE html>
     <html>
     <head>
-      <link rel="stylesheet" type="text/css" href="/swagger-ui/swagger-ui.css" />
+      <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css" />
     </head>
     <body>
       <div id="swagger-ui"></div>
-      <script src="/swagger-ui/swagger-ui-bundle.js"></script>
-      <script src="/swagger-ui/swagger-ui-standalone-preset.js"></script>
+      <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+      <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js"></script>
       <script>
         window.onload = function() {
           SwaggerUIBundle({
@@ -115,7 +115,7 @@ res.send(`
             presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
             layout: "BaseLayout"
           });
-        };
+        }
       </script>
     </body>
     </html>
