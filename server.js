@@ -79,7 +79,19 @@ app.use(fileUpload());
 
 app.use(bodyParser.json({ limit: "2mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(
+  "/v1/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, {
+    explorer: true,
+    customCssUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.6/swagger-ui.css",
+    customJs: [
+      "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.6/swagger-ui-bundle.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.6/swagger-ui-standalone-preset.js",
+    ],
+  })
+);
 
 //localization configuration
 i18next
