@@ -52,8 +52,13 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 
 app.use(
-  helmet({
-    crossOriginResourcePolicy: false,
+helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+    },
   })
 );
 app.use(
