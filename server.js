@@ -90,25 +90,28 @@ app.use("/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // ✅ Serve Swagger UI assets locally from swagger-ui-dist
 app.use("/swagger-ui", express.static(swaggerDist.getAbsoluteFSPath()));
 
+app.get("/swagger.json", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerSpec);
+});
+
 // ✅ Swagger UI page
 app.get("/v1/vercel/docs", (req, res) => {
-  res.send(`
+res.send(`
     <!DOCTYPE html>
-    <html lang="en">
+    <html>
     <head>
-      <meta charset="UTF-8" />
-      <title>Swagger Docs</title>
-      <link rel="stylesheet" href="/swagger-ui/swagger-ui.css" />
+      <link rel="stylesheet" type="text/css" href="/swagger-ui/swagger-ui.css" />
     </head>
     <body>
       <div id="swagger-ui"></div>
       <script src="/swagger-ui/swagger-ui-bundle.js"></script>
       <script src="/swagger-ui/swagger-ui-standalone-preset.js"></script>
       <script>
-        window.onload = () => {
+        window.onload = function() {
           SwaggerUIBundle({
-            url: "/v1/docs.json",   // points to your Swagger JSON
-            dom_id: "#swagger-ui",
+            url: '/swagger.json',
+            dom_id: '#swagger-ui',
             presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
             layout: "BaseLayout"
           });
