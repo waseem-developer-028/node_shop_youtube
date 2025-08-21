@@ -15,8 +15,6 @@ const swaggerUi = require("swagger-ui-express");
 // const YAML = require("yamljs");
 // const swaggerDocument = YAML.load("./swagger.yaml");
 const swaggerDocument = require("./swagger.json");
-const swaggerDist = require("swagger-ui-dist");
-
 
 const app = express();
 const cors = require("cors");
@@ -52,13 +50,8 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 
 app.use(
-helmet.contentSecurityPolicy({
-    useDefaults: true,
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-    },
+  helmet({
+    crossOriginResourcePolicy: false,
   })
 );
 app.use(
@@ -86,42 +79,7 @@ app.use(fileUpload());
 
 app.use(bodyParser.json({ limit: "2mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// ✅ Serve Swagger UI assets locally from swagger-ui-dist
-app.use("/swagger-ui", express.static(swaggerDist.getAbsoluteFSPath()));
-
-app.get("/swagger.json", (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  res.send(swaggerSpec);
-});
-
-// ✅ Swagger UI page
-app.get("/v1/vercel/docs", (req, res) => {
-res.send(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css" />
-    </head>
-    <body>
-      <div id="swagger-ui"></div>
-      <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
-      <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js"></script>
-      <script>
-        window.onload = function() {
-          SwaggerUIBundle({
-            url: '/swagger.json',
-            dom_id: '#swagger-ui',
-            presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
-            layout: "BaseLayout"
-          });
-        }
-      </script>
-    </body>
-    </html>
-  `);
-});
-
+app.use("/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, { customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css" }));
 
 //localization configuration
 i18next
