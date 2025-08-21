@@ -26,7 +26,7 @@
       "name": "Accept-Language",
       "type": "string",
       "example": "en/hi",
-      "default": "hi",
+      "default": "en",
       "required": true
     }
   },
