@@ -15,6 +15,8 @@ const swaggerUi = require("swagger-ui-express");
 // const YAML = require("yamljs");
 // const swaggerDocument = YAML.load("./swagger.yaml");
 const swaggerDocument = require("./swagger.json");
+const swaggerDist = require("swagger-ui-dist");
+
 
 const app = express();
 const cors = require("cors");
