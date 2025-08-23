@@ -1419,41 +1419,17 @@
                   "type": "string",
                   "default": null
                 },
-                "name": {
-                  "required": true,
-                  "type": "string",
-                  "example": "Test",
-                  "default": "Test"
-                },
                 "payment_method": {
                   "required": true,
                   "type": "string",
-                  "example": "razorpay",
-                  "default": "razorpay"
+                  "example": "stripe",
+                  "default": "stripe"
                 },
-                "card": {
+                "web_url": {
                   "required": true,
-                  "type": "number",
-                  "example": 4242424242424242,
-                  "default": 4242424242424242
-                },
-                "month": {
-                  "required": true,
-                  "type": "number",
-                  "example": 12,
-                  "default": 12
-                },
-                "year": {
-                  "required": true,
-                  "type": "number",
-                  "example": 2025,
-                  "default": 2025
-                },
-                "cvv": {
-                  "required": true,
-                  "type": "number",
-                  "example": 123,
-                  "default": 123
+                  "type": "string",
+                  "example": "http://www.example.com/success",
+                  "default": "http://www.example.com/success"
                 },
                 "notes": {
                   "required": true,
