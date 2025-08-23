@@ -787,6 +787,7 @@ const orders = async (req, res) => {
         current_page: +page || 1,
         per_page: limit,
         total: total,
+        lastPage: Math.ceil(total / limit),
       },
     };
 
