@@ -120,7 +120,7 @@ const login = async(req, res) =>
 {
    const {email, password} = req.body;
 
-   let user    = await User.findOne({email:email})
+   let user    = await User.findOne({email:email}).populate({ path: 'carts', select: '_id' });
 
    if(!user)
    {
@@ -144,7 +144,8 @@ const login = async(req, res) =>
      name        : user.name,
      email       : user.email,
      api_token   : user.api_token,
-     role        : user.role
+     role        : user.role,
+     cartCount: user?.carts?.length,
    }
 
    return helper.sendSuccess(data, res, req.t("data_retrived"),200)
