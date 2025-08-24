@@ -275,6 +275,7 @@ const showProduct = async (req, res) => {
           price: 1,
           image: 1,
           category: 1,
+          information: 1
         },
       },
     ]);
