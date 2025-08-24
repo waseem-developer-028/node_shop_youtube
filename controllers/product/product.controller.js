@@ -82,6 +82,7 @@ const products = async (req, res) => {
             price: 1,
             image: 1,
             qty: 1,
+            information: 1,
             ratings: { $ifNull: ["$ratings.rating", 0] },
           },
         },
@@ -94,6 +95,7 @@ const products = async (req, res) => {
             price: { $first: "$price" },
             image: { $first: "$image" },
             qty: { $first: "$qty" },
+            information: { $first: "$information" },
             reviewCount: { $sum: "$ratings.rating" },
             avgRating: { $avg: "$ratings" },
           },
@@ -112,6 +114,7 @@ const products = async (req, res) => {
             image: 1,
             qty: 1,
             total: 1,
+            information:1,
             avgRating: { $round: ["$avgRating", 1] },
             reviewCount: 1,
           },
@@ -142,6 +145,7 @@ const products = async (req, res) => {
             price: 1,
             image: 1,
             qty: 1,
+            information:1,
             reviewCount: { $sum: "$ratings.rating" },
             avgRating: {
               $cond: {
