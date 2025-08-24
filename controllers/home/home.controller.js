@@ -129,6 +129,7 @@ const topRatedProducts = async (req, res) => {
             price: 1,
             image: 1,
             qty: 1,
+            information:1,
             avgRating: 1,
           },
         },
