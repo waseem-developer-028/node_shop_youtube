@@ -1,5 +1,6 @@
 /* global LOCALE */
 const User       = require('../../models/user')
+const Cart       = require('../../models/cart') 
 const bcrypt     = require('bcryptjs')
 const {genrateUserToken}         = require('../../middlewares/auth')
 const {PASSWORD} = require('../../constant/common')
@@ -120,7 +121,8 @@ const login = async(req, res) =>
 {
    const {email, password} = req.body;
 
-   let user    = await User.findOne({email:email}).populate({ path: 'carts', select: '_id' });
+   let user    = await User.findOne({email:email})
+
 
    if(!user)
    {
@@ -139,13 +141,15 @@ const login = async(req, res) =>
        
    user= await User.findOneAndUpdate({ _id:user._id }, { $set: { api_token: token} }, { new: true });
 
+   const cartCount = await Cart.find({user_id: helper.ObjectId(user?._id)})
+
    const data={
      id          : user._id,
      name        : user.name,
      email       : user.email,
      api_token   : user.api_token,
      role        : user.role,
-     cartCount: user?.carts?.length,
+     cartCount: cartCount?.length
    }
 
    return helper.sendSuccess(data, res, req.t("data_retrived"),200)
