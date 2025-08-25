@@ -296,7 +296,7 @@ const insertOrder = async (data) => {
       });
     } //for loop close
 
-    Cart.deleteOne({ user_id: helper.ObjectId(user_id) })
+    Cart.deleteMany({ user_id: helper.ObjectId(user_id) })
       .then((cartInfo) => {})
       .catch((err) => {});
   }
