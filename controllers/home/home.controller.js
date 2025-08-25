@@ -80,6 +80,7 @@ const topRatedProducts = async (req, res) => {
           image: 1,
           qty: 1,
           avgRating: 1,
+          information: 1,
         },
       },
     ]);
