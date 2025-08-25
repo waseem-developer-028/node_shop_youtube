@@ -714,57 +714,95 @@ const orders = async (req, res) => {
           { status: { $ne: 3 }, user_id: helper.ObjectId(user_id) };
 
     const rows = await Order.aggregate([
-      {
-        $match: match,
-      },
-      {
-        $sort: { createdAt: -1 },
-      },
-      {
-        $lookup: {
-          from: "transactions",
-          localField: "transaction_id",
-          foreignField: "_id",
-          as: "transaction",
+        {
+          $match: match,
         },
-      },
-      { $unwind: { path: "$transaction", preserveNullAndEmptyArrays: true } },
-
-      { $addFields: { total: "$transaction.total_amount" } },
-
-      {
-        $project: {
-          id: "$_id",
-          _id: 0,
-          order_id: 1,
-          rated: 1,
-          notes: 1,
-          status: 1,
-          total: 1,
+        {
+          $sort: { createdAt: -1 },
         },
-      },
+        {
+          $lookup: {
+            from: 'transactions',
+            localField: 'transaction_id',
+            foreignField: '_id',
+            as: 'transaction',
+          },
+        },
+        { $unwind: { path: '$transaction', preserveNullAndEmptyArrays: true } },
 
-      {
-        $facet: {
-          data: [{ $count: "total" }],
-          metaData: [
-            { $skip: offset },
-            { $limit: limit },
+        { $addFields: { total: '$transaction.total_amount' } },
 
-            {
-              $project: {
-                id: 1,
-                order_id: 1,
-                rated: 1,
-                notes: 1,
-                status: 1,
-                total: 1,
+        {
+          $lookup: {
+            from: 'product_orders',
+            localField: '_id',
+            foreignField: 'order_id',
+            as: 'productOrders',
+          },
+        },
+        { $unwind: { path: '$productOrders', preserveNullAndEmptyArrays: true } },
+
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'productOrders.product_id',
+            foreignField: '_id',
+            as: 'product',
+          },
+        },
+        { $unwind: { path: '$product', preserveNullAndEmptyArrays: true } },
+
+        {
+          $project: {
+            id: '$_id',
+            _id: 0,
+            order_id: 1,
+            rated: 1,
+            notes: 1,
+            status: 1,
+            transaction_detail: 1,
+            address_detail: 1,
+            delivery_charge: 1,
+            total: 1,
+            'productOrders.price': 1,
+            'productOrders.quantity': 1,
+            'productOrders.size': 1,
+            'productOrders.color': 1,
+            'product.name': 1,
+            'product.image': 1,
+          },
+        },
+
+        {
+          $facet: {
+            data: [{ $count: 'total' }],
+            metaData: [
+              { $skip: offset },
+              { $limit: limit },
+
+              {
+                $project: {
+                  id: 1,
+                  order_id: 1,
+                  rated: 1,
+                  notes: 1,
+                  status: 1,
+                  total: 1,
+                  transaction_detail: 1,
+                  address_detail: 1,
+                  delivery_charge: 1,
+                  'productOrders.price': 1,
+                  'productOrders.quantity': 1,
+                  'productOrders.size': 1,
+                  'productOrders.color': 1,
+                  'product.name': 1,
+                  'product.image': 1,
+                },
               },
-            },
-          ],
+            ],
+          },
         },
-      },
-    ]);
+      ]);
 
     let total;
     let result = [];
